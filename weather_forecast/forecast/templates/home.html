@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather and Planting Conditions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .forecast, .planting-conditions {
+            margin-top: 20px;
+        }
+        .forecast table, .planting-conditions table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .forecast th, .planting-conditions th, .forecast td, .planting-conditions td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .forecast tr:hover, .planting-conditions tr:hover {
+            background-color: #f1f1f1;
+        }
+        .forecast th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .planting-conditions th {
+            background-color: #007BFF;
+            color: white;
+        }
+        .best-planting-day {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .not-planting {
+            color: #dc3545;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            font-size: 18px;
+        }
+        .input-form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-form input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 250px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .input-form button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        .input-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Forecast and Planting Conditions</h1>
+
+        <div class="input-form">
+            <form method="GET">  <!-- Use GET to pass the city parameter in the URL -->
+                {% csrf_token %}
+                <label for="city">Enter City: </label>
+                <input type="text" id="city" name="city" placeholder="Enter city name" required>
+                <button type="submit">Get Forecast</button>
+            </form>
+        </div>
+
+        <!-- Weather Forecast Table -->
+        <div class="forecast">
+            <h2>Weather Forecast (Next 7 Days)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Temperature (°C)</th>
+                        <th>Weather</th>
+                        <th>Wind Speed (km/h)</th>
+                        <th>Rain (mm)</th>
+                        <th>Humidity (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in forecast %}
+                    <tr>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.temp }}°C</td>
+                        <td>{{ item.weather }}</td>
+                        <td>{{ item.wind_speed }} km/h</td>
+                        <td>{{ item.rain }} mm</td>
+                        <td>{{ item.humidity }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Planting Conditions Table -->
+        <div class="planting-conditions">
+            <h2>Best Planting Days</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Plant</th>
+                        <th>Best Planting Day</th>
+                        <th>Conditions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plant, info in best_planting_days.items %}
+                        <tr>
+                            <td>{{ plant }}</td>
+                            <td>
+                                {% if info.date %}
+                                    <span class="best-planting-day">{{ info.date }}</span>
+                                {% else %}
+                                    <span class="not-planting">Not ideal for planting</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if info.reason %}
+                                    <span class="not-planting">{{ info.reason }}</span>
+                                {% else %}
+                                    <span class="best-planting-day">All conditions are good!</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Error Handling -->
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

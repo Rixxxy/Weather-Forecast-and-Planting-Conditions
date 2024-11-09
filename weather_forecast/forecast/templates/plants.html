@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Forecast for {{ city }}</title>
+</head>
+<body>
+    <h1>5-Day Weather Forecast for {{ city }}</h1>
+
+    <h2>Best Day for Planting</h2>
+    {% if best_planting_day %}
+        <p>The best day for planting is <strong>{{ best_planting_day.date }}</strong>.</p>
+        <p>Temperature: {{ best_planting_day.temp }}°C</p>
+        <p>Weather: {{ best_planting_day.weather }}</p>
+        <p>Rain: {{ best_planting_day.rain }} mm</p>
+        <p>Humidity: {{ best_planting_day.humidity }}%</p>
+        <p>Wind Speed: {{ best_planting_day.wind_speed }} km/h</p>
+        <p>UV Index: {{ best_planting_day.uv_index }}</p>
+        <p>Dew Point: {{ best_planting_day.dew_point }}°C</p>
+    {% else %}
+        <p>No optimal day for planting found in the next 5 days.</p>
+    {% endif %}
+
+    <h2>Full 5-Day Forecast</h2>
+    <ul>
+        {% for day in forecast %}
+            <li>{{ day.date }} - {{ day.weather }} - {{ day.temp }}°C</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
