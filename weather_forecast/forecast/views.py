@@ -2,7 +2,7 @@ from django.shortcuts import render
 import requests
 from datetime import datetime
 
-API_KEY = '4f33fe271ff7e0fd65af64a0d084fb42'
+API_KEY = 'Your_API_Key'
 BASE_URL = 'http://api.openweathermap.org/data/2.5/forecast'
 
 plants = [
